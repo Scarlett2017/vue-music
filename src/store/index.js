@@ -20,8 +20,4 @@ export default new Vuex.Store({
     state,
     strict:debug,
     plugins:debug ? [createLogger()] : []
-<<<<<<< HEAD
 })
-=======
-})
->>>>>>> e906022046d3dc4aad322e0b60498c14bbffba6f
