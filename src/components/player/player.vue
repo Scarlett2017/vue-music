@@ -20,13 +20,18 @@
         <div class="middle">
           <div class="middle-l">
             <div class="cd-wrapper" ref="cdWrapper">
+<<<<<<< HEAD
               <div class="cd" :class="cdCls">
+=======
+              <div class="cd" >
+>>>>>>> e906022046d3dc4aad322e0b60498c14bbffba6f
                 <img class="image" :src="currentSong.image">
               </div>
             </div>
           </div>
         </div>
         <div class="bottom">
+<<<<<<< HEAD
           <div class="progress-wrapper">
             <span class="time time-l">{{format(currentTime)}}</span>
             <div class="progress-bar-wrapper">
@@ -34,10 +39,13 @@
             </div>
             <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
+=======
+>>>>>>> e906022046d3dc4aad322e0b60498c14bbffba6f
           <div class="operators">
             <div class="icon i-left">
               <i class="icon-sequence"></i>
             </div>
+<<<<<<< HEAD
             <div class="icon i-left" :class="disableCls">
               <i class="icon-prev" @click="prev"></i>
             </div>
@@ -46,6 +54,16 @@
             </div>
             <div class="icon i-right" :class="disableCls">
               <i class="icon-next" @click="next"></i>
+=======
+            <div class="icon i-left">
+              <i class="icon-prev"></i>
+            </div>
+            <div class="icon i-center">
+              <i class="icon-play"></i>
+            </div>
+            <div class="icon i-right">
+              <i class="icon-next"></i>
+>>>>>>> e906022046d3dc4aad322e0b60498c14bbffba6f
             </div>
             <div class="icon i-right">
               <i class="icon icon-not-favorite"></i>
@@ -54,26 +72,39 @@
         </div>
       </div>
       </transition>
+<<<<<<< HEAD
       <transition name="mini">
       <div class="mini-player" v-show="!fullScreen" @click="open">
         <div class="icon">
           <img width="40" height="40" :src="currentSong.image" :class="cdCls">
+=======
+      <transition>
+      <div class="mini-player" v-show="!fullScreen" @click="open">
+        <div class="icon">
+          <img width="40" height="40" :src="currentSong.image">
+>>>>>>> e906022046d3dc4aad322e0b60498c14bbffba6f
         </div>
         <div class="text">
           <h2 class="name">{{currentSong.name}}</h2>
           <p class="desc">{{currentSong.singer}}</p>
         </div>
         <div class="control">
+<<<<<<< HEAD
           <progress-circle :radius="radius" :percent="percent">          
             <i @click.stop="togglePlaying" :class="miniIcon" class="icon-mini"></i>
           </progress-circle>
+=======
+>>>>>>> e906022046d3dc4aad322e0b60498c14bbffba6f
         </div>
         <div class="control">
           <i class="icon-playlist"></i>
         </div>
       </div>
       </transition>
+<<<<<<< HEAD
       <audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
+=======
+>>>>>>> e906022046d3dc4aad322e0b60498c14bbffba6f
   </div>
 </template>
 
@@ -81,6 +112,7 @@
 import {mapGetters,mapMutations} from 'vuex'
 import animations from 'create-keyframe-animation'//css3动画库
 import {prefixStyle} from 'common/js/dom'
+<<<<<<< HEAD
 import ProgressBar from 'base/progress-bar/progress-bar'
 import ProgressCircle from 'base/progress-circle/progress-circle'
 
@@ -116,6 +148,17 @@ const transform = prefixStyle('transform')
         'currentSong',
         'playing',
         'currentIndex'
+=======
+
+const transform =prefixStyle('transform')
+
+  export default{
+    computed:{
+      ...mapGetters([
+        'fullScreen',
+        'playlist',
+        'currentSong'
+>>>>>>> e906022046d3dc4aad322e0b60498c14bbffba6f
       ])
     },
     methods:{
@@ -158,16 +201,24 @@ const transform = prefixStyle('transform')
         this.$refs.cdWrapper.style.animation = ''
       },
       leave(el,done){
+<<<<<<< HEAD
         this.$refs.cdWrapper.style.transition = 'all 0.4s'
         const {x,y,scale} = this._getPosAndScale()
         this.$refs.cdWrapper.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale}`
         this.$refs.cdWrapper.addEventListener('transitionend',done)
+=======
+        this.$refs.cdWrapper.style.transition = 'all .4s'
+        const {x,y,scale} = this._getPosAndScale()
+        this.$refs.cdWrapper.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale}`
+        this.$refs.cdWrapper.addEventListener('transitioned',done)
+>>>>>>> e906022046d3dc4aad322e0b60498c14bbffba6f
       },
       afterLeave(){
         // 清空动画
         this.$refs.cdWrapper.style.transition = ''
         this.$refs.cdWrapper.style[transform] = ''
       },
+<<<<<<< HEAD
       togglePlaying(){
         if(!this.songReady){
           return
@@ -231,6 +282,8 @@ const transform = prefixStyle('transform')
         }
         return num
       },
+=======
+>>>>>>> e906022046d3dc4aad322e0b60498c14bbffba6f
       _getPosAndScale(){
         // 获取目标位置
         const targetWidth = 40
@@ -244,6 +297,7 @@ const transform = prefixStyle('transform')
         return {x,y,scale}
       },
       ...mapMutations({
+<<<<<<< HEAD
         setFullScreen:'SET_FULL_SCREEN',
         setPlayingState:'SET_PLAYING_STATE',
         setCurrentIndex:'SET_CURRENT_INDEX'
@@ -265,6 +319,10 @@ const transform = prefixStyle('transform')
     components:{
       ProgressBar,
       ProgressCircle
+=======
+        setFullScreen:'SET_FULL_SCREEN'
+      })
+>>>>>>> e906022046d3dc4aad322e0b60498c14bbffba6f
     }
   }
 </script>
