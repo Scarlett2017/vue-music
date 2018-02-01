@@ -52,9 +52,10 @@
       },
       progressClick(e){
         const rect = this.$refs.progressBar.getBoundingClientRect()
+        //DOMRect 对象包含了一组用于描述边框的只读属性——left、top、right和bottom，单位为像素。除了 width 和 height 外的属性都是相对于视口的左上角位置而言的。
         const offsetWidth = e.pageX - rect.left
         this._offset(offsetWidth)
-        // 这里当我们点击 progressBtn 的时候，e.offsetX 获取不对
+        // 当点击progressBtn时，e.offsetX获取不对
         // this._offset(e.offsetX)
         this._triggerPercent()
       },
@@ -65,7 +66,7 @@
       _triggerPercent(){
         const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
         const percent = this.$refs.progress.clientWidth / barWidth
-        this.$emit('percentChange',percent)        
+        this.$emit('percentChange', percent)      
       }
     },
     watch: {
