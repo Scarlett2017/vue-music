@@ -293,7 +293,8 @@ const transform = prefixStyle('transform')
           return
         }
         this.$nextTick(() => {
-          this.$refs.audio.play()          
+          this.$refs.audio.play()
+          this.currentSong.getLyric()          
         })
       },
       playing(newPlaying){
