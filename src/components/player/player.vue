@@ -181,6 +181,17 @@ const transform = prefixStyle('transform')
         }
         this.setPlayingState(!this.playing)
       },
+      end(){
+        if(this.playMode === playMode.loop){
+          this.loop()
+        }else{
+          this.next()
+        }
+      },
+      loop(){
+        this.$refs.audio.currentTime = 0
+        this.$refs.audio.paly()
+      },
       prev(){
         if(!this.songReady){
           return
@@ -234,11 +245,12 @@ const transform = prefixStyle('transform')
         const mode = (this.mode + 1) % 3
         this.setPlayMode(mode)
         let list = null
-        if(this.mode === playing.random){
+        if(this.mode === playMode.random){
           list = shuffle(this.sequenceList)
         }else{
           list = this.sequenceList
         }
+        this.resetCurrentIndex(list)
         this.setPlayList(list)
       },
       resetCurrentIndex(list){
