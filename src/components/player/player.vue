@@ -190,7 +190,7 @@ const transform = prefixStyle('transform')
       },
       loop(){
         this.$refs.audio.currentTime = 0
-        this.$refs.audio.paly()
+        this.$refs.audio.play()
       },
       prev(){
         if(!this.songReady){
