@@ -182,7 +182,7 @@ const transform = prefixStyle('transform')
         this.setPlayingState(!this.playing)
       },
       end(){
-        if(this.playMode === playMode.loop){
+        if(this.mode === playMode.loop){
           this.loop()
         }else{
           this.next()
