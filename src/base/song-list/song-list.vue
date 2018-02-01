@@ -2,12 +2,9 @@
   <div class="song-list">
     <ul>
       <li @click="selectItem(song, index)" class="item" v-for="(song, index) in songs">
-<<<<<<< HEAD
-=======
         <div class="rank" v-show="rank">
           <span :class="getRankCls(index)" v-text="getRankText(index)"></span>
         </div>
->>>>>>> e906022046d3dc4aad322e0b60498c14bbffba6f
         <div class="content">
           <h2 class="name">{{song.name}}</h2>
           <p class="desc">{{getDesc(song)}}</p>
@@ -35,8 +32,6 @@
       },
       getDesc(song) {
         return `${song.singer}·${song.album}`
-<<<<<<< HEAD
-=======
       },
       getRankCls(index) {
         if (index <= 2) {
@@ -49,7 +44,6 @@
         if (index > 2) {
           return index + 1
         }
->>>>>>> e906022046d3dc4aad322e0b60498c14bbffba6f
       }
     }
   }
