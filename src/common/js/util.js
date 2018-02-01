@@ -5,11 +5,12 @@ function getRandomInt(min, max) {
 
 // 数组洗牌函数
 export function shuffle(arr) {
-  for (let i = 0; i < arr.lenth; i++) {
+  let _arr = arr.slice()//创建arr副本，不会直接修改原数组顺序
+  for (let i = 0; i < _arr.lenth; i++) {
     let j = getRandomInt(0, i)
-    let t = arr[i]
-    arr[i] = arr[j]
-    arr[j] = t
+    let t = _arr[i]
+    _arr[i] = _arr[j]
+    _arr[j] = t
   }
-  return arr
+  return _arr
 }
