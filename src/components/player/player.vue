@@ -31,14 +31,14 @@
             <div class="icon i-left">
               <i class="icon-sequence"></i>
             </div>
-            <div class="icon i-left">
-              <i class="icon-prev"></i>
+            <div class="icon i-left" :class="disableCls">
+              <i class="icon-prev" @click="prev"></i>
             </div>
-            <div class="icon i-center">
-              <i class="icon-play"></i>
+            <div class="icon i-center" :class="disableCls">
+              <i @click="togglePlaying" :class="playIcon"></i>
             </div>
-            <div class="icon i-right">
-              <i class="icon-next"></i>
+            <div class="icon i-right" :class="disableCls">
+              <i class="icon-next" @click="next"></i>
             </div>
             <div class="icon i-right">
               <i class="icon icon-not-favorite"></i>
@@ -47,22 +47,26 @@
         </div>
       </div>
       </transition>
-      <transition>
+      <transition name="mini">
       <div class="mini-player" v-show="!fullScreen" @click="open">
         <div class="icon">
-          <img width="40" height="40" :src="currentSong.image">
+          <img width="40" height="40" :src="currentSong.image" :class="cdCls">
         </div>
         <div class="text">
           <h2 class="name">{{currentSong.name}}</h2>
           <p class="desc">{{currentSong.singer}}</p>
         </div>
         <div class="control">
+          <progress-circle :radius="radius" :percent="percent">          
+            <i @click.stop="togglePlaying" :class="miniIcon" class="icon-mini"></i>
+          </progress-circle>
         </div>
         <div class="control">
           <i class="icon-playlist"></i>
         </div>
       </div>
       </transition>
+      <audio :src="currentSong.url" ref="audio" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
   </div>
 </template>
 
@@ -70,15 +74,41 @@
 import {mapGetters,mapMutations} from 'vuex'
 import animations from 'create-keyframe-animation'//css3动画库
 import {prefixStyle} from 'common/js/dom'
+import ProgressBar from 'base/progress-bar/progress-bar'
+import ProgressCircle from 'base/progress-circle/progress-circle'
 
-const transform =prefixStyle('transform')
+const transform = prefixStyle('transform')
 
   export default{
+    data(){
+      return {
+        songReady:false,
+        currentTime:0,
+        radius:32
+      }
+    },
     computed:{
+      playIcon(){
+        return this.playing ? 'icon-pause' : 'icon-play'
+      },
+      miniIcon(){
+        return this.playing ? 'icon-pause-mini' : 'icon-play-mini'        
+      },
+      cdCls(){
+        return this.playing ? 'play' : 'play pause'
+      },
+      disableCls(){
+        return this.songReady ? '' : 'disable'
+      },
+      percent(){
+        return this.currentTime / this.currentSong.duration
+      },
       ...mapGetters([
         'fullScreen',
         'playlist',
-        'currentSong'
+        'currentSong',
+        'playing',
+        'currentIndex'
       ])
     },
     methods:{
@@ -121,15 +151,78 @@ const transform =prefixStyle('transform')
         this.$refs.cdWrapper.style.animation = ''
       },
       leave(el,done){
-        this.$refs.cdWrapper.style.transition = 'all .4s'
+        this.$refs.cdWrapper.style.transition = 'all 0.4s'
         const {x,y,scale} = this._getPosAndScale()
         this.$refs.cdWrapper.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale}`
-        this.$refs.cdWrapper.addEventListener('transitioned',done)
+        this.$refs.cdWrapper.addEventListener('transitionend',done)
       },
       afterLeave(){
         // 清空动画
         this.$refs.cdWrapper.style.transition = ''
         this.$refs.cdWrapper.style[transform] = ''
+      },
+      togglePlaying(){
+        if(!this.songReady){
+          return
+        }
+        this.setPlayingState(!this.playing)
+      },
+      prev(){
+        if(!this.songReady){
+          return
+        }
+        let index = this.currentIndex - 1
+        if(index === -1){
+          index = this.playlist.length - 1
+        }
+        this.setCurrentIndex(index)
+        if (!this.playing) {
+            this.togglePlaying()
+          }
+          this.songReady = false
+      },
+      next(){
+        if(!this.songReady){
+          return
+        }
+        let index = this.currentIndex + 1
+        if (index === this.playlist.length) {
+          index = 0
+        }
+        this.setCurrentIndex(index)
+        if (!this.playing) {
+            this.togglePlaying()
+          }
+          this.songReady = false          
+      },
+      ready(){
+        this.songReady = true
+      },
+      error(){
+        this.songReady = true        
+      },
+      updateTime(e){
+        this.currentTime = e.target.currentTime
+      },
+     format(interval) {
+        interval = interval | 0
+        const minute = interval / 60 | 0
+        const second = this._pad(interval % 60)
+        return `${minute}:${second}`
+      },
+      onProgressBarChange(percent){
+        this.$refs.audio.currentTime = this.currentSong.duration * percent
+        if(!this.playing){
+          this.togglePlaying()
+        }
+      },
+       _pad(num, n = 2) {
+        let len = num.toString().length
+        while (len < n) {
+          num = '0' + num
+          len++
+        }
+        return num
       },
       _getPosAndScale(){
         // 获取目标位置
@@ -144,8 +237,27 @@ const transform =prefixStyle('transform')
         return {x,y,scale}
       },
       ...mapMutations({
-        setFullScreen:'SET_FULL_SCREEN'
+        setFullScreen:'SET_FULL_SCREEN',
+        setPlayingState:'SET_PLAYING_STATE',
+        setCurrentIndex:'SET_CURRENT_INDEX'
       })
+    },
+    watch:{
+      currentSong(){
+        this.$nextTick(() => {
+          this.$refs.audio.play()          
+        })
+      },
+      playing(newPlaying){
+        const audio = this.$refs.audio
+        this.$nextTick( () => {
+          newPlaying ? audio.play() : audio.pause()          
+        })
+      }
+    },
+    components:{
+      ProgressBar,
+      ProgressCircle
     }
   }
 </script>
